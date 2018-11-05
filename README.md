@@ -4,11 +4,13 @@ selection structures introduced in the following paper:
 
 [Xiaohan Chen\*](http://people.tamu.edu/~chernxh),
 [Jialin Liu\*](http://www.math.ucla.edu/~liujl11/pub.html),
-[Zhangyang Wang\*](http://www.atlaswang.com/) and
-[Wotao Yin\*](http://www.math.ucla.edu/~wotaoyin/)
+[Zhangyang Wang](http://www.atlaswang.com/) and
+[Wotao Yin](http://www.math.ucla.edu/~wotaoyin/)
 "Theoretical Linear Convergence of Unfolded ISTA and its Practical Weights and
-Thresholds", accepted as spotlight oral at NIPS 2018. The
-[preprint version](https://arxiv.org/abs/1808.10038).
+Thresholds", accepted as spotlight oral at NIPS 2018. The preprint version is
+[here](https://arxiv.org/abs/1808.10038).
+
+\*: These authors contributed equally and are listed alphabetically.
 
 The code is tested in Linux environment (Tensorflow: 1.10.0, CUDA9.0) with Titan
 1080Ti GPU.
