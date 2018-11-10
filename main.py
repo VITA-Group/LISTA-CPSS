@@ -140,6 +140,33 @@ def setup_model (config , **kwargs) :
                             untied=config.untied , coord=config.coord,
                             scope=config.scope)
 
+    """LISTA-CS"""
+    if config.net == 'LISTA_cs' :
+        config.model = ("LISTA_cs_T{T}_lam{lam}_llam{llam}_"
+                        "{untiedf}_{coordf}_{exp_id}"
+                        .format (T=config.T, lam=config.lam, llam=config.lasso_lam,
+                                 untiedf=untiedf, coordf=coordf,
+                                 exp_id=config.exp_id))
+        from models.LISTA_cs import LISTA_cs
+        model = LISTA_cs (kwargs ['Phi'], kwargs ['D'], T=config.T,
+                          lam=config.lam, untied=config.untied,
+                          coord=config.coord, scope=config.scope)
+
+    """LISTA-SS-CS"""
+    if config.net == 'LISTA_ss_cs' :
+        config.model = ("LISTA_ss_cs_T{T}_lam{lam}_p{p}_mp{mp}_llam{llam}_"
+                        "{untiedf}_{coordf}_{exp_id}"
+                        .format (T=config.T, lam=config.lam, p=config.percent,
+                                 mp=config.max_percent, llam=config.lasso_lam,
+                                 untiedf=untiedf, coordf=coordf,
+                                 exp_id=config.exp_id))
+        from models.LISTA_ss_cs import LISTA_ss_cs
+        model = LISTA_ss_cs (kwargs ['Phi'], kwargs ['D'], T=config.T,
+                             lam=config.lam, percent=config.percent,
+                             max_percent=config.max_percent,
+                             untied=config.untied, coord=config.coord,
+                             scope=config.scope)
+
     """LISTA-CPSS-CS"""
     if config.net == 'LISTA_cpss_cs' :
         config.model = ("LISTA_cpss_cs_T{T}_lam{lam}_p{p}_mp{mp}_llam{llam}_"
@@ -357,8 +384,6 @@ def run_cs_test (config) :
     patch_size = int (np.sqrt (F))
     assert patch_size ** 2 == F
 
-    # scale = 255.0 if config.norm_patch else 1.0
-    # print ('use scale {}'.format (scale))
 
     """Set up model."""
     model = setup_model (config, Phi=Phi, D=D)
@@ -390,23 +415,9 @@ def run_cs_test (config) :
         for test_fn in test_files :
             # read in image
             test_fn = os.path.join (test_dir, test_fn)
-            # if config.column :
-            #     test_im = np.array (Image.open (test_fn), dtype=np.float32)
-            #     H, W = test_im.shape
-            #     if H == 512 :
-            #         test_fs = np.concatenate (
-            #                 (test_im [:256,:], test_im [256:,:]), axis=1)
-            #     else :
-            #         test_fs = np.copy (test_im)
-            #     test_fs /= scale
-            # else :
             test_im, H, W, test_im_pad, H_pad, W_pad = \
                     imread_CS_py (test_fn, patch_size, stride)
             test_fs = img2col_py (test_im_pad, patch_size, stride)
-
-            # extract patches, vectorize, and transpose
-            # test_ps = extract_patches_2d (test_im / scale, (patch_size, patch_size))
-            # test_fs = np.transpose (test_ps.reshape (len (test_ps), -1))
 
             # remove dc from features
             test_dc = np.mean (test_fs, axis=0, keepdims=True)
@@ -417,16 +428,6 @@ def run_cs_test (config) :
             test_ys = np.matmul (Phi, test_cfs)
             num_patch = test_ys.shape [1]
 
-            # bs = 10000
-            # if num_patch > 10 * bs :
-            #     # block-wisely estimate sparse codes
-            #     xhs  = np.zeros (shape=(nC, num_patch), dtype=np.float32)
-            #     for i in range (num_patch // bs) :
-            #         xhs[:,i*bs:(i+1)*bs] =\
-            #                 sess.run (xhs_, feed_dict={p.y_: test_ys[:,i*bs:(i+1)*bs]})
-            #     xhs[:,(i+1)*bs:] =\
-            #             sess.run (xhs_, feed_dict={p.y_: test_ys[:,(i+1)*bs:]})
-            # else :
             rec_cfs = sess.run (fhs_ [-1], feed_dict={y_: test_ys})
             print (rec_cfs.shape)
             rec_fs  = rec_cfs * 255.0 + test_dc
@@ -436,23 +437,8 @@ def run_cs_test (config) :
             patch_denom = np.sum (np.square (test_fs))
             avg_nmse += 10.0 * np.log10 (patch_err / patch_denom)
 
-            # recover image
-            # rec_fs = np.transpose (rec_fs * scale)
-            # rec_ps = rec_fs.reshape ((len (rec_fs), patch_size, patch_size))
-            # rec_im = reconstruct_from_patches_2d (rec_ps, test_im.shape)
-            # if config.column :
-            #     rec_fs *= scale
-            #     if H == 512 :
-            #         rec_im = np.concatenate (
-            #                 (rec_fs [:,:512], rec_fs [:,512:]), axis=0)
-            #     else :
-            #         rec_im = np.copy (rec_fs)
-            # else :
             rec_im = col2im_CS_py (rec_fs, patch_size, stride,
                                    H, W, H_pad, W_pad)
-
-            # clip rec_im to [0, 255]
-            #  rec_im = np.clip (rec_im, 0, 255)
 
             # image-level PSNR
             image_mse = np.mean (np.square (rec_im - test_im))
