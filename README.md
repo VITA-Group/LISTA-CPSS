@@ -3,7 +3,7 @@ This repository is for LISTA networks with weight coupling and/or support
 selection structures introduced in the following paper:
 
 [Xiaohan Chen\*](http://people.tamu.edu/~chernxh),
-[Jialin Liu\*](http://www.math.ucla.edu/~liujl11/pub.html),
+[Jialin Liu\*](https://www.math.ucla.edu/~liujl11/),
 [Zhangyang Wang](http://www.atlaswang.com/) and
 [Wotao Yin](http://www.math.ucla.edu/~wotaoyin/)
 "Theoretical Linear Convergence of Unfolded ISTA and its Practical Weights and
