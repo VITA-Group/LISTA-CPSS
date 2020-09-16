@@ -204,7 +204,7 @@ def run_train (config) :
 def run_sc_train (config) :
     """Load problem."""
     if not os.path.exists (config.probfn):
-        raise ValueError ("Problem file not found.")
+        raise ValueError ("Problem file not found: " + str(config.probfn))
     else:
         p = problem.load_problem (config.probfn)
 
@@ -314,7 +314,7 @@ def run_sc_test (config) :
 
     """Set up model."""
     model = setup_model (config , A=p.A)
-    xhs_ = model.inference (input_, None, False)
+    xhs_ = model.inference (input_) #None, False)
 
     """Create session and initialize the graph."""
     tfconfig = tf.ConfigProto (allow_soft_placement=True)
