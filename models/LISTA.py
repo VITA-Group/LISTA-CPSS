@@ -97,6 +97,7 @@ class LISTA (LISTA_base):
         self.vars_in_layer = list (zip (Bs_, Ws_, thetas_))
 
     def inference (self, y_, x0_=None):
+        """ Feed forward. Returns a list containing the output from each layer. """
         xhs_  = [] # collection of the regressed sparse codes
 
         if x0_ is None:

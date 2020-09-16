@@ -19,11 +19,20 @@ from utils.data import bsd500_cs_inputs
 def setup_input_sc (test, p, tbs, vbs, fixval, supp_prob, SNR,
                     magdist, **distargs):
     """TODO: Docstring for function.
+    :parameter test: Set to True if data set is for testing, False if dataset is for training
+    :parameter p: instance of class Problem
+    :parameter tbs: training batch size
+    :parameter vbs: validation batch size
+    :parameter fixval: fix the validation set if True ?
+    :parameter supp_prob: percent of non-zero entries in sparse code, support size
+    :parameter SNR: signal to noise ratio, set to if for no noise
+    :parameter magdist: The distribution to draw magnitudes from
 
-    :arg1: TODO
     :returns: TODO
 
+
     """
+    # N is signal size, M is measurement size
     M, N = p.A.shape
 
     with tf.name_scope ('input'):
@@ -32,8 +41,7 @@ def setup_input_sc (test, p, tbs, vbs, fixval, supp_prob, SNR,
         prob_ = tf.constant (value=supp_prob, dtype=tf.float32, name='prob')
 
         """Sample supports."""
-        supp_ = tf.random_uniform (shape=(N, tbs), minval=0.0, maxval=1.0,
-                                   name='supp')
+        supp_ = tf.random_uniform(shape=(N, tbs), minval=0.0, maxval=1.0, name='supp')
         supp_ = tf.to_float (supp_ <= prob_)
 
         if not test:
