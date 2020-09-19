@@ -213,10 +213,13 @@ def run_sc_train (config) :
 
     """Set up input."""
     config.SNR = np.inf if config.SNR == 'inf' else float (config.SNR)
-    y_, x_, y_val_, x_val_ = (
-        train.setup_input_sc (
-            config.test, p, config.tbs, config.vbs, config.fixval,
-            config.supp_prob, config.SNR, config.magdist, **config.distargs))
+    if config.custominput is None:
+      y_, x_, y_val_, x_val_ = (
+          train.setup_input_sc (
+              config.test, p, config.tbs, config.vbs, config.fixval,
+              config.supp_prob, config.SNR, config.magdist, **config.distargs))
+    else:
+      y_, x_, y_val, x_val = train.load_input(config.custominput, config.test, config.vbs, config.SNR)
 
     """Set up training."""
     stages = train.setup_sc_training (

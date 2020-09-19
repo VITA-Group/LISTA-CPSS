@@ -15,6 +15,38 @@ import numpy as np
 
 from utils.data import bsd500_cs_inputs
 
+def load_input(input_folder, test, vbs=.1, SNR="inf", p=None):
+    """
+    :parameter test: Set to True if data set is for testing, False if dataset is for training
+    :parameter vbs: validation/training batch ratio
+    :parameter SNR: signal to noise ratio, set to inf for no noise
+    :parameter p: instance of class Problem
+    """
+    # generate filenames
+    input_folder = os.path.abspath(input_folder)
+    if test:
+        x_file_name = os.path.join(input_folder, "measurements_test.npy")
+        y_file_name = os.path.join(os.path.split(input_folder)[0], "images_test.npy")
+    else:
+        x_file_name = os.path.join(input_folder, "measurements_train.npy")
+        y_file_name = os.path.join(os.path.split(input_folder)[0], "images_train.npy")
+
+    # load files
+    x = np.load(x_file_name)
+    y = np.load(y_file_name)
+
+    # return data set(s)
+    if test:
+        return tf.convert_to_tensor(x), tf.convert_to_tensor(y)
+    else:
+        val_size = round(len(x)*vbs)
+        x_val = x[:val_size]
+        y_val = y[:val_size]
+        x = x[val_size:]
+        y= y[val_size:]
+
+        return tf.convert_to_tensor(x), tf.convert_to_tensor(y), tf.convert_to_tensor(x_val), tf.convert_to_tensor(y_val)
+
 
 def setup_input_sc (test, p, tbs, vbs, fixval, supp_prob, SNR,
                     magdist, **distargs):
@@ -890,3 +922,10 @@ def load_trainable_variables (sess, filename):
 
     return other
 
+
+if __name__ == "__main__":
+    x, y, x_val, y_val = load_input("/home/jab/Skole/Master/data/data_sets/2d/random_dots_128/measurements_1/",False)
+    print(x.shape)
+    print(y.shape)
+    print(x_val.shape)
+    print(y_val.shape)

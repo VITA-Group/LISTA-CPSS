@@ -182,6 +182,8 @@ exp_arg.add_argument (
     '-g', '--gpu', type=str, default='0',
     help="ID's of allocated GPUs.")
 
+# arguments added by jonaudunbaar@gmail.com
+exp_arg.add_argument('-ci', '--custominput', type=str, help='Filename of custom training data.')
 
 def get_config():
     config, unparsed = parser.parse_known_args ()
