@@ -35,6 +35,8 @@ def load_input(input_folder, test, vbs=.1, SNR="inf", p=None):
     x = np.load(x_file_name)
     y = np.load(y_file_name)
 
+    x = x.reshape((x.shape[0]*x.shape[1],))
+
     # return data set(s)
     if test:
         return tf.convert_to_tensor(x), tf.convert_to_tensor(y)
