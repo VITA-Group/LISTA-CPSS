@@ -17,6 +17,7 @@ from utils.data import bsd500_cs_inputs
 
 def load_input(input_folder, test, vbs=.1, SNR="inf", p=None):
     """
+    :param input_folder: Name of folder containing measurement files
     :parameter test: Set to True if data set is for testing, False if dataset is for training
     :parameter vbs: validation/training batch ratio
     :parameter SNR: signal to noise ratio, set to inf for no noise
