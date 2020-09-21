@@ -35,12 +35,12 @@ def load_input(input_folder, test, vbs=.1, SNR="inf", p=None):
 
     # load files
     x = np.load(x_file_name)
-    print(f"Signals with shape {x.shape} loaded successfully from file '{x_file_name}'.")
+    print(f"Measurements with shape {x.shape} loaded successfully from file '{x_file_name}'.")
     y = np.load(y_file_name)
-    print(f"Measurements with shape {y.shape} loaded successfully from file '{y_file_name}'.")
+    print(f"Signals with shape {y.shape} loaded successfully from file '{y_file_name}'.")
 
     print(f"Reshaping signals ... ")
-    x = x.reshape((x.shape[0],x.shape[1]*x.shape[2]))
+    y = y.reshape((y.shape[0],y.shape[1]*y.shape[2]))
     print("Reshaping signals [DONE].")
 
     # return data set(s)
