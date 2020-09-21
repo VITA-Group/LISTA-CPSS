@@ -78,6 +78,7 @@ def setup_model (config , **kwargs) :
     untiedf = 'u' if config.untied else 't'
     coordf  = 'c' if config.coord  else 's'
 
+    print(f"Loading model ... ")
     """LISTA"""
     if config.net == 'LISTA' :
         config.model = ("LISTA_T{T}_lam{lam}_{untiedf}_{coordf}_{exp_id}"
